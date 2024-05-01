@@ -1,15 +1,16 @@
-package com.example.employee_management.dto;
+package com.example.employee_management.controller;
 
 import com.example.employee_management.enums.JobTitle;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeDTO {
-
+@NoArgsConstructor
+@Data
+public class EmployeeRequest {
     private long id;
 
     private String name;
@@ -21,3 +22,4 @@ public class EmployeeDTO {
     private double salary;
 
 }
+

@@ -1,39 +1,127 @@
 package com.example.employee_management.service;
 
+import com.example.employee_management.controller.EmployeeResponse;
 import com.example.employee_management.dto.EmployeeDTO;
+import com.example.employee_management.enums.JobTitle;
+import com.example.employee_management.exception.EmployeeNotFoundException;
 import com.example.employee_management.model.Employee;
 import com.example.employee_management.repository.EmployeeRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+
+/**
+ * EmployeeServiceImpl class provides implementation for EmployeeService interface.
+ */
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     EmployeeRepository employeeRepository;
 
-    // Inject EmployeeRepository to the service class.
+    /**
+     * Injects EmployeeRepository to the service class.
+     *
+     * @param employeeRepository the employee repository
+     */
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
-
+    /**
+     * Saves an employee to the database.
+     *
+     * @param employeeDTO the employee data transfer object
+     * @return the saved employee DTO
+     */
     @Override
-    public void saveEmployee(EmployeeDTO employeeDTO) {
+    public EmployeeDTO saveEmployee(EmployeeDTO employeeDTO) {
         Employee employee = convertDtoToEntity(employeeDTO);
-        employeeRepository.save(employee);
+        Employee persistedEmployee = employeeRepository.save(employee);
+        return convertEntityToDto(persistedEmployee);
+    }
+
+    /**
+     * Retrieves all employees from the database.
+     *
+     * @return a list of all employee DTOs
+     */
+    @Override
+    public List<EmployeeDTO> getAllEmployee() {
+        List<Employee> persistedEmployees = employeeRepository.findAll();
+        return persistedEmployees.stream()
+                .map(this::convertEntityToDto)
+                .toList();
+    }
+
+    /**
+     * Retrieves an employee by ID from the database.
+     *
+     * @param id the employee ID
+     * @return the employee DTO if found
+     * @throws EmployeeNotFoundException if no employee with the given ID is found
+     */
+    @Override
+    public EmployeeDTO getEmployeeById(long id) {
+        return employeeRepository.findById(id)
+                .map(this::convertEntityToDto)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+    }
+
+    /**
+     * Updates an employee in the database.
+     *
+     * @return the updated employee DTO
+     * @throws EmployeeNotFoundException if the employee to update is not found
+     */
+    @Override
+    public EmployeeDTO updateEmployeeById(long id, EmployeeDTO employeeDTO) {
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+
+        // Update the existing employee with data from the DTO
+        existingEmployee.setName(employeeDTO.getName());
+        existingEmployee.setJobTitle(employeeDTO.getJobTitle());
+        existingEmployee.setDateOfBirth(employeeDTO.getDateOfBirth());
+        existingEmployee.setSalary(employeeDTO.getSalary());
+
+        // Save the updated employee
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
+
+        return convertEntityToDto(updatedEmployee);
     }
 
     @Override
-    public List<EmployeeDTO> getAllEmployee(EmployeeDTO employeeDTO) {
-        return List.of(employeeDTO);
+    public ResponseEntity<EmployeeResponse> deleteEmployeeById(long id) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        if (optionalEmployee.isPresent()) {
+            employeeRepository.deleteById(id);
+            return ResponseEntity.ok(new EmployeeResponse("Employee deleted successfully"));
+        } else {
+            throw new EmployeeNotFoundException("Employee not found with id: " + id);
+        }
     }
 
     @Override
-    public EmployeeDTO getEmployeeById(EmployeeDTO employeeDTO) {
+    public ResponseEntity<EmployeeResponse> deleteAll() {
+        long count = employeeRepository.count();
+        employeeRepository.deleteAll();
+        return ResponseEntity.ok(new EmployeeResponse("Deleted " + count + " employees"));
+    }
+
+    @Override
+    public EmployeeDTO getEmployeeByJobTitle(JobTitle jobTitle) {
         return null;
     }
 
+    /**
+     * Converts an employee entity to an employee DTO.
+     *
+     * @param employee the employee entity
+     * @return the employee DTO
+     */
     public EmployeeDTO convertEntityToDto(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
 
@@ -46,9 +134,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeDTO;
     }
 
+    /**
+     * Converts an employee DTO to an employee entity.
+     *
+     * @param employeeDTO the employee DTO
+     * @return the employee entity
+     */
     public Employee convertDtoToEntity(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-
         employee.setId(employeeDTO.getId());
         employee.setName(employeeDTO.getName());
         employee.setJobTitle(employeeDTO.getJobTitle());

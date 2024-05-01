@@ -1,6 +1,6 @@
 package com.example.employee_management.model;
 
-import com.example.employee_management.enums.JobTitles;
+import com.example.employee_management.enums.JobTitle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -15,28 +15,27 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "EMPLOYEES")
+@Table(name = "employees")
 public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private long id;
 
     @NotBlank
-    @Column(name = "EMPLOYEE_NAME")
+    @Column(name = "employee_name")
     private String name;
 
-    @NotBlank
-    @Column(name = "JOB_TITLE")
-    private JobTitles jobTitle;
+    @Column(name = "job_title")
+    private JobTitle jobTitle;
 
     @Past
-    @Column(name = "DATE_OF_BIRTH")
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Positive
-    @Column(name = "SALARY")
+    @Column(name = "salary")
     private double salary;
 
 }
