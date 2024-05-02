@@ -1,6 +1,5 @@
 package com.example.employee_management.service;
 
-import com.example.employee_management.controller.EmployeeResponse;
 import com.example.employee_management.dto.EmployeeDTO;
 import com.example.employee_management.enums.JobTitle;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +20,10 @@ public interface EmployeeService {
     EmployeeDTO updateEmployeeById(long id, EmployeeDTO employeeDTO);
 
     //deleteEmployeeById
-    ResponseEntity<EmployeeResponse> deleteEmployeeById(long id);
+    void deleteEmployeeById(long id);
 
     //deleteAll
-    ResponseEntity<EmployeeResponse> deleteAll();
+    ResponseEntity<String> deleteAll();
 
     //getEmployeeByJobTitle
     EmployeeDTO getEmployeeByJobTitle(JobTitle jobTitle);

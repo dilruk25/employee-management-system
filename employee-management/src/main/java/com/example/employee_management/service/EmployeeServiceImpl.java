@@ -1,6 +1,5 @@
 package com.example.employee_management.service;
 
-import com.example.employee_management.controller.EmployeeResponse;
 import com.example.employee_management.dto.EmployeeDTO;
 import com.example.employee_management.enums.JobTitle;
 import com.example.employee_management.exception.EmployeeNotFoundException;
@@ -64,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @throws EmployeeNotFoundException if no employee with the given ID is found
      */
     @Override
-    public EmployeeDTO getEmployeeById(long id) {
+    public EmployeeDTO getEmployeeById(long id) throws EmployeeNotFoundException {
         return employeeRepository.findById(id)
                 .map(this::convertEntityToDto)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
@@ -93,24 +92,36 @@ public class EmployeeServiceImpl implements EmployeeService {
         return convertEntityToDto(updatedEmployee);
     }
 
+    /**
+     * Deletes an employee with the specified ID from the database.
+     *
+     * @param id the ID of the employee to delete
+     */
     @Override
-    public ResponseEntity<EmployeeResponse> deleteEmployeeById(long id) {
+    public void deleteEmployeeById(long id) throws EmployeeNotFoundException {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
         if (optionalEmployee.isPresent()) {
             employeeRepository.deleteById(id);
-            return ResponseEntity.ok(new EmployeeResponse("Employee deleted successfully"));
         } else {
             throw new EmployeeNotFoundException("Employee not found with id: " + id);
         }
     }
 
+
+    /**
+     * Deletes all employees from the database.
+     *
+     * @return a ResponseEntity with a success message indicating the number of employees deleted
+     */
     @Override
-    public ResponseEntity<EmployeeResponse> deleteAll() {
+    public ResponseEntity<String> deleteAll() {
         long count = employeeRepository.count();
         employeeRepository.deleteAll();
-        return ResponseEntity.ok(new EmployeeResponse("Deleted " + count + " employees"));
+        employeeRepository.resetEmployeeId();
+        return ResponseEntity.ok("Deleted " + count + " employees");
     }
 
+//TODO
     @Override
     public EmployeeDTO getEmployeeByJobTitle(JobTitle jobTitle) {
         return null;
