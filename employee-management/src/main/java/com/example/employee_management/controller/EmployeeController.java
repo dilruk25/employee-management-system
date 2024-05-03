@@ -78,29 +78,29 @@ public class EmployeeController {
     }
 
     /**
-         * Endpoint for updating an employee's information.
-         *
-         * @param id              The ID of the employee to update.
-         * @param employeeRequest The request body containing the updated employee information.
-         * @return ResponseEntity containing the updated employee's information if successful, or 404 if not found.
-         */
-        @PutMapping("/{id}")
-        public ResponseEntity<EmployeeResponse> updateEmployeeById ( @PathVariable long id, @RequestBody EmployeeRequest employeeRequest) {
-            try {
-                // Convert the request to DTO if necessary
-                EmployeeDTO employeeDTO = convertRequestToDTO(employeeRequest);
+     * Endpoint for updating an employee's information.
+     *
+     * @param id              The ID of the employee to update.
+     * @param employeeRequest The request body containing the updated employee information.
+     * @return ResponseEntity containing the updated employee's information if successful, or 404 if not found.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeResponse> updateEmployeeById(@PathVariable long id, @RequestBody EmployeeRequest employeeRequest) {
+        try {
+            // Convert the request to DTO if necessary
+            EmployeeDTO employeeDTO = convertRequestToDTO(employeeRequest);
 
-                // Update the employee
-                EmployeeDTO updatedEmployeeDTO = employeeService.updateEmployeeById(id, employeeDTO);
+            // Update the employee
+            EmployeeDTO updatedEmployeeDTO = employeeService.updateEmployeeById(id, employeeDTO);
 
-                // Convert the updated DTO to response
-                EmployeeResponse employeeResponse = convertDTOToResponse(updatedEmployeeDTO);
+            // Convert the updated DTO to response
+            EmployeeResponse employeeResponse = convertDTOToResponse(updatedEmployeeDTO);
 
-                return ResponseEntity.ok(employeeResponse);
-            } catch (EmployeeNotFoundException e) {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(employeeResponse);
+        } catch (EmployeeNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmployeeById(@PathVariable long id) {
@@ -108,16 +108,20 @@ public class EmployeeController {
             employeeService.deleteEmployeeById(id);
             return ResponseEntity.ok("Employee deleted successfully");
         } catch (EmployeeNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("Employee not available with that ID", HttpStatus.NOT_FOUND);
         }
     }
 
 
-
+    /**
+     * Deletes all employees.
+     *
+     * @return a ResponseEntity with a message indicating the number of employees deleted
+     */
     @DeleteMapping
     public ResponseEntity<String> deleteAllEmployees() {
-            ResponseEntity<String> response = employeeService.deleteAll();
-            return ResponseEntity.ok(response.getBody());
+        ResponseEntity<String> response = employeeService.deleteAll();
+        return ResponseEntity.ok(response.getBody());
     }
 
     /**

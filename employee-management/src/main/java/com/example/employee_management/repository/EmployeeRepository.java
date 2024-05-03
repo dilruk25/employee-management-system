@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
+    /**
+     * To reset Employee ID after deleting the entire Employee list
+     */
     @Modifying
     @Transactional
     @Query(value = "TRUNCATE TABLE employees;", nativeQuery = true)

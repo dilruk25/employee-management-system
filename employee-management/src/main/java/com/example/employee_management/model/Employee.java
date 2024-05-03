@@ -27,6 +27,7 @@ public class Employee {
     @Column(name = "employee_name")
     private String name;
 
+    @Enumerated(EnumType.STRING) // Store enum as a string
     @Column(name = "job_title")
     private JobTitle jobTitle;
 
