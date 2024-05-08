@@ -23,6 +23,7 @@ import static com.example.employee_management.enums.JobTitle.BACKEND_DEVELOPER;
 import static com.example.employee_management.enums.JobTitle.FRONTEND_DEVELOPER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -96,8 +97,24 @@ class EmployeeControllerTest {
     }
 
     @Test
-    @Disabled
     void getEmployeeById() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId(1l);
+        employeeDTO.setName("dilruk");
+        employeeDTO.setJobTitle(BACKEND_DEVELOPER);
+        employeeDTO.setDateOfBirth(LocalDate.of(2002,Month.MARCH,21));
+        employeeDTO.setSalary(60000);
+        long id=1l;
+        when(employeeService.getEmployeeById(anyLong())).thenReturn(employeeDTO);
+
+        ResponseEntity<Object> responseEntity = employeeController.getEmployeeById(id);
+
+        assertNotNull(responseEntity.getBody());
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+
+
+
+
     }
 
     @Test

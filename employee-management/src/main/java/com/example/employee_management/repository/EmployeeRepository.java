@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     /**
@@ -15,4 +17,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Transactional
     @Query(value = "TRUNCATE TABLE employees;", nativeQuery = true)
     void resetEmployeeId();
+
+    /**
+     *query to find employee by title
+     */
+
+    List<Employee> findByTitle(String title);
+
 }
