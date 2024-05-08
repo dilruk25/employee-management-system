@@ -77,17 +77,19 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public EmployeeDTO updateEmployeeById(long id, EmployeeDTO employeeDTO) {
-        Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+//        Employee existingEmployee = employeeRepository.findById(id)
+//                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
 
-        // Update the existing employee with data from the DTO
-        existingEmployee.setName(employeeDTO.getName());
-        existingEmployee.setJobTitle(employeeDTO.getJobTitle());
-        existingEmployee.setDateOfBirth(employeeDTO.getDateOfBirth());
-        existingEmployee.setSalary(employeeDTO.getSalary());
+//        // Update the existing employee with data from the DTO
+//        existingEmployee.setName(employeeDTO.getName());
+//        existingEmployee.setJobTitle(employeeDTO.getJobTitle());
+//        existingEmployee.setDateOfBirth(employeeDTO.getDateOfBirth());
+//        existingEmployee.setSalary(employeeDTO.getSalary());
+
+        Employee employee = convertDtoToEntity(employeeDTO);
 
         // Save the updated employee
-        Employee updatedEmployee = employeeRepository.save(existingEmployee);
+        Employee updatedEmployee = employeeRepository.save(employee);
 
         return convertEntityToDto(updatedEmployee);
     }

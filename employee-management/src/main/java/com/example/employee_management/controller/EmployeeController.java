@@ -73,7 +73,7 @@ public class EmployeeController {
             EmployeeResponse employeeResponse = convertDTOToResponse(employeeDTO);
             return ResponseEntity.ok(employeeResponse);
         } catch (EmployeeNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found with id: " + id);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Employee not found with id: " + id);
         }
     }
 
