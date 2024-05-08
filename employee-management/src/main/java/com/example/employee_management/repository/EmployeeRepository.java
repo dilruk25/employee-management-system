@@ -1,5 +1,6 @@
 package com.example.employee_management.repository;
 
+import com.example.employee_management.enums.JobTitle;
 import com.example.employee_management.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,6 +23,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      *query to find employee by title
      */
 
-    List<Employee> findByTitle(String title);
-
+    List<Employee> findByJobTitle(JobTitle jobTitle);
 }

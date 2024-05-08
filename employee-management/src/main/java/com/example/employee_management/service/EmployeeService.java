@@ -26,5 +26,5 @@ public interface EmployeeService {
     ResponseEntity<String> deleteAll();
 
     //getEmployeeByJobTitle
-    EmployeeDTO getEmployeeByJobTitle(JobTitle jobTitle);
+    List<EmployeeDTO> getEmployeeByJobTitle(JobTitle jobTitle);
 }

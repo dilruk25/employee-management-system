@@ -1,6 +1,7 @@
 package com.example.employee_management.controller;
 
 import com.example.employee_management.dto.EmployeeDTO;
+import com.example.employee_management.enums.JobTitle;
 import com.example.employee_management.exception.EmployeeNotFoundException;
 import com.example.employee_management.service.EmployeeService;
 import org.springframework.http.HttpStatus;
@@ -152,5 +153,11 @@ public class EmployeeController {
         response.setDateOfBirth(employeeDTO.getDateOfBirth());
         response.setSalary(employeeDTO.getSalary());
         return response;
+    }
+
+    @GetMapping("/{jobTitle}")
+    public ResponseEntity<List<EmployeeDTO>> getEmployeeByJobTitle(@PathVariable JobTitle jobTitle) {
+        List<EmployeeDTO> employees = employeeService.getEmployeeByJobTitle(jobTitle);
+        return ResponseEntity.ok(employees);
     }
 }

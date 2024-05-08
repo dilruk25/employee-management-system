@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
 /**
  * EmployeeServiceImpl class provides implementation for EmployeeService interface.
  */
@@ -116,12 +115,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         return ResponseEntity.ok("Deleted " + count + " employees");
     }
 
-
+    /**
+     * Retrieves a list of employees with the specified job title.
+     *
+     * @param jobTitle The job title to search for.
+     * @return A list of {@link EmployeeDTO} objects representing employees with the specified job title.
+     */
     @Override
-    public EmployeeDTO getEmployeeByJobTitle(JobTitle jobTitle) {
+    public List<EmployeeDTO> getEmployeeByJobTitle(JobTitle jobTitle) {
+        // Use the employeeRepository to find employees by job title
+        List<Employee> employees = employeeRepository.findByJobTitle(jobTitle);
 
-        return null;
+        // Convert the list of Employee entities to a list of EmployeeDTOs
+        return employees.stream()
+                .map(this::convertEntityToDto)
+                .toList();
     }
+
 
     /**
      * Converts an employee entity to an employee DTO.
