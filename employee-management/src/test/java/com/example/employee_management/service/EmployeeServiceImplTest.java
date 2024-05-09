@@ -9,9 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +22,7 @@ import static com.example.employee_management.enums.JobTitle.BACKEND_DEVELOPER;
 import static com.example.employee_management.enums.JobTitle.FRONTEND_DEVELOPER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -126,4 +128,47 @@ class EmployeeServiceImplTest {
         assertEquals(employee.getDateOfBirth(), getEmployeeById.getDateOfBirth());
         assertEquals(employee.getSalary(), getEmployeeById.getSalary());
     }
+
+
+    @Test
+    void deleteEmployeeById() throws EmployeeNotFoundException{
+        long employeeId = 1l;
+        Employee employee = new Employee();
+        employee.setId(employeeId);
+        when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
+
+        // Act
+        employeeServiceImpl.deleteEmployeeById(employeeId);
+
+        // Assert
+        verify(employeeRepository, times(1)).deleteById(employeeId);
+
+    }
+
+
+    @Test
+    void deleteAllEmployees() throws EmployeeNotFoundException{
+        // Mock data
+        long count = 5L;
+
+        // Mock repository behavior
+        when(employeeRepository.count()).thenReturn(count);
+
+        // Create instance of service
+        EmployeeServiceImpl employeeService = new EmployeeServiceImpl(employeeRepository);
+
+        // Call the method to be tested
+        ResponseEntity<String> response = employeeService.deleteAll();
+
+        // Verify that repository count, deleteAll, and resetEmployeeId methods were called
+        verify(employeeRepository, times(1)).count();
+        verify(employeeRepository, times(1)).deleteAll();
+        verify(employeeRepository, times(1)).resetEmployeeId();
+
+
+    }
+
+
+
+
 }
